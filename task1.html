@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editable Table with React</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Editable Table with React</h1>
+  <div id="root"></div>
+
+  <!-- React and ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+  <!-- Your Script -->
+  <script>
+    const { useState } = React;
+
+    function EditableTable() {
+      const [data, setData] = useState([
+        { id: 1, name: 'John Doe', email: 'john@example.com' },
+        { id: 2, name: 'Jane Smith', email: 'jane@example.com' }
+      ]);
+
+      const handleChange = (e, id, field) => {
+        const { value } = e.target;
+        setData(data.map(item => 
+          item.id === id ? { ...item, [field]: value } : item
+        ));
+      };
+
+      const handleSubmit = () => {
+        console.log('Data to post:', data);
+        // Example: Use fetch to post data to an API
+        // fetch('https://api.example.com/data', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify(data)
+        // });
+      };
+
+      return (
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map(item => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>
+                    <input
+                      type="text"
+                      value={item.name}
+                      onChange={(e) => handleChange(e, item.id, 'name')}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={item.email}
+                      onChange={(e) => handleChange(e, item.id, 'email')}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={handleSubmit}>Submit Data</button>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<EditableTable />, document.getElementById('root'));
+  </script>
+</body>
+</html>
